@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ViewChild, AfterViewInit,} from '@angular/core';
 import { Goal } from '../goal';
 import { GoalService } from '../goal-service/goal.service';
+import { NgProgressComponent } from 'ngx-progressbar';
+
 
 @Component({
   selector: 'app-goal',
   templateUrl: './goal.component.html',
   styleUrls: ['./goal.component.css']
 })
-export class GoalComponent implements OnInit {  
+export class GoalComponent implements OnInit, AfterViewInit {  
   
   goals:Goal[];
   
@@ -36,10 +38,22 @@ export class GoalComponent implements OnInit {
       }
     }
   }
+  @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
   constructor(goalService:GoalService) { 
-    this.goals = goalService.getGoals()
+      this.goals = goalService.getGoals()
   }  
-  
-  ngOnInit(): void {
+
+  ngAfterViewInit(){
+    this.progressBar.start()
+    setTimeout(() => { 
+      if(this.goals){
+        this.progressBar.complete()
+      }
+    });
+    
+    
+  }
+  ngOnInit() {
+
   }
 }
